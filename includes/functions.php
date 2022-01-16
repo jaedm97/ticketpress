@@ -6,25 +6,21 @@
  */
 
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}  // if direct access
-
-
-if ( ! function_exists( 'cstools' ) ) {
+if ( ! function_exists( 'ticketpress' ) ) {
 	/**
-	 * Return global $cstools
+	 * Return global $ticketpress
 	 *
-	 * @return CSTOOLS_Functions
+	 * @return TicketPress_Functions
 	 */
-	function cstools() {
-		global $cstools;
+	function ticketpress() {
 
-		if ( empty( $cstools ) ) {
-			$cstools = new CSTOOLS_Functions();
+		global $ticketpress;
+
+		if ( empty( $ticketpress ) ) {
+			$ticketpress = new TicketPress_Functions();
 		}
 
-		return $cstools;
+		return $ticketpress;
 	}
 }
 

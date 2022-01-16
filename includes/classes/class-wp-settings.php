@@ -166,7 +166,7 @@ if ( ! class_exists( 'WP_Settings' ) ) {
 			$args['labels'] = array_merge( array(
 				'name'               => sprintf( __( '%s' ), $plural ),
 				'singular_name'      => $singular,
-				'menu_name'          => __( $singular ),
+				'menu_name'          => __( $plural ),
 				'all_items'          => sprintf( __( '%s' ), $plural ),
 				'add_new'            => sprintf( __( 'Add %s' ), $singular ),
 				'add_new_item'       => sprintf( __( 'Add %s' ), $singular ),
