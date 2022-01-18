@@ -3,6 +3,8 @@
  * Class Hooks
  */
 
+defined( 'ABSPATH' ) || exit;
+
 class TicketPress_Hooks {
 
 	function __construct() {
@@ -19,6 +21,16 @@ class TicketPress_Hooks {
 		}
 
 		return $single_template;
+	}
+
+
+	function render_vehicle_listing( $atts ) {
+
+		ob_start();
+
+		require TICKETPRESS_FILE_DIR . 'templates/vehicle-listing.php';
+
+		return ob_get_clean();
 	}
 
 
@@ -45,6 +57,8 @@ class TicketPress_Hooks {
 			'plural'       => 'Routes',
 			'hierarchical' => true,
 		) );
+
+		ticketpress()->WP_Settings()->register_shortcode( 'vehicle-listing', array( $this, 'render_vehicle_listing' ) );
 	}
 }
 

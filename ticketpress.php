@@ -13,6 +13,9 @@
  */
 
 
+defined( 'ABSPATH' ) || exit;
+
+
 if ( ! defined( 'TICKETPRESS_FILE_DIR' ) ) {
 	define( 'TICKETPRESS_FILE_DIR', plugin_dir_path( __FILE__ ) . '/' );
 }
@@ -51,3 +54,32 @@ new TicketPress_Main();
 //	echo "</pre>";
 //
 //} );
+
+//
+//function render_my_email( $atts ) {
+//
+//	ob_start();
+//
+//
+//	$user_id = isset( $atts['id'] ) && ! empty( $atts['id'] ) ? $atts['id'] : get_current_user_id();
+//
+//	if ( empty( $user_id ) ) {
+//		return '<p>No User ID found!</p>';
+//	}
+//
+//	$user = get_user_by( 'id', $user_id );
+//
+//	?>
+<!---->
+<!--    <div class="p-wrap">-->
+<!--        <p>Username: --><?php //echo $user->user_login; ?><!--</p>-->
+<!--        <p>Full Name: --><?php //echo $user->display_name; ?><!--</p>-->
+<!--        <p>Email: --><?php //echo $user->user_email; ?><!--</p>-->
+<!--    </div>-->
+<!---->
+<!--	--><?php
+//
+//	return ob_get_clean();
+//}
+//
+//add_shortcode( 'user-details', 'render_my_email' );

@@ -5,6 +5,8 @@
 
 namespace TicketPress;
 
+defined( 'ABSPATH' ) || exit;
+
 class Vehicle {
 
 	public $id = null;
