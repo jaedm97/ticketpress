@@ -8,6 +8,17 @@ class TicketPress_Hooks {
 	function __construct() {
 
 		add_action( 'init', array( $this, 'register_post_types' ) );
+		add_filter( 'single_template', array( $this, 'load_vehicle_template' ) );
+	}
+
+
+	function load_vehicle_template( $single_template ) {
+
+		if ( is_singular( 'vehicle' ) ) {
+			$single_template = TICKETPRESS_FILE_DIR . 'templates/single-vehicle.php';
+		}
+
+		return $single_template;
 	}
 
 
@@ -16,12 +27,10 @@ class TicketPress_Hooks {
 	 */
 	function register_post_types() {
 
-
-
 		ticketpress()->WP_Settings()->register_post_type( 'vehicle', array(
 			'singular'  => 'Vehicle',
 			'plural'    => 'Vehicles',
-			'menu_icon' => 'dashicons - car',
+			'menu_icon' => 'dashicons-car',
 			'supports'  => array( 'title', 'thumbnail' ),
 		) );
 

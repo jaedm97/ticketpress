@@ -303,7 +303,7 @@ if ( ! class_exists( 'WP_Settings' ) ) {
 							$option['value'] = $post->post_name;
 						} elseif ( $option_id == 'content' ) {
 							$option['value'] = $post->post_content;
-						} else {
+						} elseif ( ! isset( $option['value'] ) ) {
 							$option['value'] = get_post_meta( $post_id, $option_id, true );
 						}
 
