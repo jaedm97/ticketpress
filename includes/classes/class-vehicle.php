@@ -5,6 +5,8 @@
 
 namespace TicketPress;
 
+use WP_Term;
+
 defined( 'ABSPATH' ) || exit;
 
 class Vehicle {
@@ -36,6 +38,20 @@ class Vehicle {
 		$this->id = empty( $vehicle_id ) || $vehicle_id == 0 ? get_the_ID() : $vehicle_id;
 
 		$this->set_data();
+	}
+
+
+	function get_types( $separator = ', ' ) {
+
+		$types = array();
+
+		foreach ( $this->types as $type ) {
+			if ( $type instanceof WP_Term ) {
+				$types[] = $type->name;
+			}
+		}
+
+		return implode( $separator, $types );
 	}
 
 

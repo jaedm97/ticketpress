@@ -9,6 +9,7 @@ $vehicle = new TicketPress\Vehicle();
 
 
 echo $vehicle->post->post_title;
+echo $vehicle->number;
 
 
 
