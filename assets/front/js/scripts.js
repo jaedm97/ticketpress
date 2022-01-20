@@ -2,8 +2,21 @@
  * Front Script
  */
 
-(function ($, window, document, pluginObject) {
+(function ($, window, document) {
     "use strict";
+
+
+    $(document).on('change', '#route', function () {
+        $('#VehicleFilterForm').submit();
+    });
+
+    $(document).on('click', '#formReset', function () {
+
+        let url = window.location.href.split('?');
+
+        window.location.href = url[0];
+    });
+
 
     // $(document).on('click', '.cstools-get-poll-results', function () {
     //
@@ -66,7 +79,7 @@
     //     });
     // });
 
-})(jQuery, window, document, cstools_object);
+})(jQuery, window, document);
 
 
 

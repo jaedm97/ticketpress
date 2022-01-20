@@ -16,10 +16,8 @@
 defined( 'ABSPATH' ) || exit;
 
 
-if ( ! defined( 'TICKETPRESS_FILE_DIR' ) ) {
-	define( 'TICKETPRESS_FILE_DIR', plugin_dir_path( __FILE__ ) . '/' );
-}
-
+defined( 'TICKETPRESS_FILE_DIR' ) || define( 'TICKETPRESS_FILE_DIR', plugin_dir_path( __FILE__ ) . '/' );
+defined( 'TICKETPRESS_FILE_URL' ) || define( 'TICKETPRESS_FILE_URL', WP_PLUGIN_URL . '/' . plugin_basename( dirname( __FILE__ ) ) . '/' );
 
 class TicketPress_Main {
 
@@ -32,6 +30,15 @@ class TicketPress_Main {
 		require TICKETPRESS_FILE_DIR . 'includes/classes/class-hooks.php';
 		require TICKETPRESS_FILE_DIR . 'includes/classes/class-meta-boxes.php';
 		require TICKETPRESS_FILE_DIR . 'includes/classes/class-vehicle.php';
+
+		add_action( 'wp_enqueue_scripts', array( $this, 'add_frontend_scripts' ) );
+	}
+
+
+	function add_frontend_scripts() {
+
+		wp_enqueue_style( 'ticketpress-front', TICKETPRESS_FILE_URL . 'assets/front/css/style.css', array(), time() );
+		wp_enqueue_script( 'ticketpress-front', TICKETPRESS_FILE_URL . 'assets/front/js/scripts.js', array( 'jquery' ) );
 	}
 }
 
@@ -70,14 +77,14 @@ new TicketPress_Main();
 //	$user = get_user_by( 'id', $user_id );
 //
 //	?>
-<!---->
-<!--    <div class="p-wrap">-->
-<!--        <p>Username: --><?php //echo $user->user_login; ?><!--</p>-->
-<!--        <p>Full Name: --><?php //echo $user->display_name; ?><!--</p>-->
-<!--        <p>Email: --><?php //echo $user->user_email; ?><!--</p>-->
-<!--    </div>-->
-<!---->
-<!--	--><?php
+    <!---->
+    <!--    <div class="p-wrap">-->
+    <!--        <p>Username: --><?php //echo $user->user_login; ?><!--</p>-->
+    <!--        <p>Full Name: --><?php //echo $user->display_name; ?><!--</p>-->
+    <!--        <p>Email: --><?php //echo $user->user_email; ?><!--</p>-->
+    <!--    </div>-->
+    <!---->
+    <!--	--><?php
 //
 //	return ob_get_clean();
 //}

@@ -41,15 +41,34 @@ class Vehicle {
 	}
 
 
+
+
+	function get_routes( $separator = ', ' ) {
+
+		$routes = $this->routes;
+		$routes = ! is_array( $routes ) || empty( $routes ) ? array() : $routes;
+		$routes = array_map( function ( $route ) {
+			if ( $route instanceof WP_Term ) {
+				return $route->name;
+			}
+
+			return '';
+		}, $routes );
+
+		return implode( $separator, $routes );
+	}
+
 	function get_types( $separator = ', ' ) {
 
-		$types = array();
-
-		foreach ( $this->types as $type ) {
+		$types = $this->types;
+		$types = ! is_array( $this->types ) || empty( $this->types ) ? array() : $types;
+		$types = array_map( function ( $type ) {
 			if ( $type instanceof WP_Term ) {
-				$types[] = $type->name;
+				return $type->name;
 			}
-		}
+
+			return '';
+		}, $types );
 
 		return implode( $separator, $types );
 	}
