@@ -38,55 +38,12 @@ class TicketPress_Main {
 	function add_frontend_scripts() {
 
 		wp_enqueue_style( 'ticketpress-front', TICKETPRESS_FILE_URL . 'assets/front/css/style.css', array(), time() );
-		wp_enqueue_script( 'ticketpress-front', TICKETPRESS_FILE_URL . 'assets/front/js/scripts.js', array( 'jquery' ) );
+		wp_enqueue_script( 'ticketpress-front', TICKETPRESS_FILE_URL . 'assets/front/js/scripts.js', array( 'jquery' ), time() );
+		wp_localize_script( 'ticketpress-front', 'ticketPress', array(
+//			'test' => esc_html__( 'Test Data', 'ticketpress' ),
+			'ajaxURL' => admin_url( 'admin-ajax.php' ),
+		) );
 	}
 }
 
 new TicketPress_Main();
-
-// single-vehicle-hanif-enterprise.php
-// single-vehicle.php
-// single.php
-// singular.php
-// index.php
-//
-//add_action( 'wp_footer', function () {
-//
-//	$vehicle_id = get_the_ID();
-//
-//	$vehicle = new TicketPress\Vehicle( 77 );
-//
-//	echo "<pre>";
-//	print_r( $vehicle );
-//	echo "</pre>";
-//
-//} );
-
-//
-//function render_my_email( $atts ) {
-//
-//	ob_start();
-//
-//
-//	$user_id = isset( $atts['id'] ) && ! empty( $atts['id'] ) ? $atts['id'] : get_current_user_id();
-//
-//	if ( empty( $user_id ) ) {
-//		return '<p>No User ID found!</p>';
-//	}
-//
-//	$user = get_user_by( 'id', $user_id );
-//
-//	?>
-    <!---->
-    <!--    <div class="p-wrap">-->
-    <!--        <p>Username: --><?php //echo $user->user_login; ?><!--</p>-->
-    <!--        <p>Full Name: --><?php //echo $user->display_name; ?><!--</p>-->
-    <!--        <p>Email: --><?php //echo $user->user_email; ?><!--</p>-->
-    <!--    </div>-->
-    <!---->
-    <!--	--><?php
-//
-//	return ob_get_clean();
-//}
-//
-//add_shortcode( 'user-details', 'render_my_email' );

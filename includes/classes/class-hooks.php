@@ -11,6 +11,39 @@ class TicketPress_Hooks {
 
 		add_action( 'init', array( $this, 'register_post_types' ) );
 		add_filter( 'single_template', array( $this, 'load_vehicle_template' ) );
+
+		// Filter Ajax
+		add_action( 'wp_ajax_ticketpress_search_vehicle', array( $this, 'ticketpress_search_vehicle' ) );
+	}
+
+
+	function ticketpress_search_vehicle() {
+
+		$posted_data = wp_unslash( $_POST );
+		$_form_data  = ticketpress()->get_args_option( 'form_data', $posted_data );
+
+		parse_str( $_form_data, $form_data );
+
+		$vehicle_query = ticketpress_get_vehicle_query( array(
+			'posts_per_page' => - 1,
+			'order'          => 'ASC',
+			'orderby'        => 'date',
+			'fields'         => 'ids',
+			'extra_args'     => $form_data,
+		) );
+		$vehicle_html  = array();
+
+		if ( $vehicle_query->have_posts() ) :
+			while ( $vehicle_query->have_posts() ) :
+
+				$vehicle_query->the_post();
+
+				$vehicle_html[] = ticketpress_get_single_vehicle_html();
+
+			endwhile;
+		endif;
+
+		wp_send_json_success( implode( ' ', $vehicle_html ) );
 	}
 
 
@@ -29,6 +62,15 @@ class TicketPress_Hooks {
 		ob_start();
 
 		require TICKETPRESS_FILE_DIR . 'templates/vehicle-listing.php';
+
+		return ob_get_clean();
+	}
+
+	function render_vehicle_listing_ajax( $atts ) {
+
+		ob_start();
+
+		require TICKETPRESS_FILE_DIR . 'templates/vehicle-listing-ajax.php';
 
 		return ob_get_clean();
 	}
@@ -59,6 +101,7 @@ class TicketPress_Hooks {
 		) );
 
 		ticketpress()->WP_Settings()->register_shortcode( 'vehicle-listing', array( $this, 'render_vehicle_listing' ) );
+		ticketpress()->WP_Settings()->register_shortcode( 'vehicle-listing-ajax', array( $this, 'render_vehicle_listing_ajax' ) );
 	}
 }
 

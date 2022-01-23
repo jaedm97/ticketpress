@@ -1,2 +1,20 @@
 @charset "UTF-8";
 
+
+.actions {
+    margin-top: 20px;
+}
+
+span.action-fav {
+    font-size: 14px;
+    background: #496d7e;
+    color: #f1f1f1;
+    border-radius: 3px;
+    padding: 5px 10px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+span.action-fav.fav {
+    background: #009688;
+}

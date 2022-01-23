@@ -218,3 +218,103 @@ if ( ! function_exists( 'cstools_locate_template' ) ) {
 		return apply_filters( 'cstools_filters_locate_template', $template, $template_name, $template_path );
 	}
 }
+
+
+/**
+ * return vehicle query args
+ *
+ * @param array $args
+ *
+ * @return WP_Query
+ */
+function ticketpress_get_vehicle_query( $args = array() ) {
+
+	$default_args = array(
+		'post_type'      => 'vehicle',
+		'posts_per_page' => 10,
+		'order'          => 'ASC',
+		'orderby'        => 'date',
+	);
+
+	$args = wp_parse_args( $args, $default_args );
+
+	$extra_args = ticketpress()->get_args_option( 'extra_args', $args );
+	$p_start    = ticketpress()->get_args_option( 'p_start', $extra_args );
+	$p_end      = ticketpress()->get_args_option( 'p_end', $extra_args );
+	$type       = ticketpress()->get_args_option( 'type', $extra_args );
+	$route      = ticketpress()->get_args_option( 'route', $extra_args );
+	$meta_query = array();
+	$tax_query  = array();
+
+	if ( ! empty( $p_start ) && ! empty( $p_end ) ) {
+		$meta_query[] = array(
+			'key'     => '_price',
+			'value'   => array( $p_start, $p_end ),
+			'compare' => 'BETWEEN',
+			'type'    => 'numeric',
+		);
+	}
+
+	if ( ! empty( $type ) ) {
+		$tax_query[] = array(
+			'taxonomy' => 'vehicle_type',
+			'field'    => 'slug',
+			'terms'    => $type,
+		);
+	}
+
+	if ( ! empty( $route ) ) {
+		$tax_query[] = array(
+			'taxonomy' => 'vehicle_route',
+			'field'    => 'slug',
+			'terms'    => $route,
+		);
+	}
+
+
+	$args['meta_query'] = $meta_query;
+
+	$args['tax_query'] = $tax_query;
+
+
+	return new WP_Query( apply_filters( 'ticketpress_vehicle_query_args', $args ) );
+}
+
+
+function ticketpress_get_single_vehicle_html( $vehicle_id = '' ) {
+
+	$vehicle = new TicketPress\Vehicle( $vehicle_id );
+	$is_fav  = get_post_meta( $vehicle->id, 'fav_user_id', true );
+
+	ob_start();
+	?>
+    <div class="single-vehicle">
+
+        <h3><?php echo esc_html( $vehicle->post->post_title ); ?></h3>
+
+        <div class="vehicle-meta-data">
+            <div class="meta">
+                <strong>Price:</strong><span><?php echo esc_html( $vehicle->price ); ?></span>
+            </div>
+            <div class="meta">
+                <strong>Number:</strong><span><?php echo esc_html( $vehicle->number ); ?></span>
+            </div>
+            <div class="meta">
+                <strong>Seats:</strong><span><?php echo esc_html( $vehicle->total_seats ); ?></span>
+            </div>
+            <div class="meta">
+                <strong>Types:</strong><span><?php echo esc_html( $vehicle->get_types() ); ?></span>
+            </div>
+            <div class="meta">
+                <strong>Routes:</strong><span><?php echo esc_html( $vehicle->get_routes() ); ?></span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <span class="action action-fav">Favourite</span>
+        </div>
+
+    </div>
+	<?php
+	return ob_get_clean();
+}
