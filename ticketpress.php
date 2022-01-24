@@ -41,7 +41,9 @@ class TicketPress_Main {
 		wp_enqueue_script( 'ticketpress-front', TICKETPRESS_FILE_URL . 'assets/front/js/scripts.js', array( 'jquery' ), time() );
 		wp_localize_script( 'ticketpress-front', 'ticketPress', array(
 //			'test' => esc_html__( 'Test Data', 'ticketpress' ),
-			'ajaxURL' => admin_url( 'admin-ajax.php' ),
+			'ajaxURL'   => admin_url( 'admin-ajax.php' ),
+			'favText'   => esc_html__( 'Favourite', 'ticketpress' ),
+			'unFavText' => esc_html__( 'Un Favourite', 'ticketpress' ),
 		) );
 	}
 }

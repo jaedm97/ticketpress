@@ -14,6 +14,23 @@ class TicketPress_Hooks {
 
 		// Filter Ajax
 		add_action( 'wp_ajax_ticketpress_search_vehicle', array( $this, 'ticketpress_search_vehicle' ) );
+		add_action( 'wp_ajax_ticketpress_vehicle_fav', array( $this, 'ticketpress_vehicle_fav' ) );
+	}
+
+
+	function ticketpress_vehicle_fav() {
+
+		$posted_data    = wp_unslash( $_POST );
+		$vehicle_id     = ticketpress()->get_args_option( 'vehicle_id', $posted_data );
+		$vehicle_action = ticketpress()->get_args_option( 'vehicle_action', $posted_data );
+
+		if ( $vehicle_action == 'unfav' ) {
+			delete_user_meta( get_current_user_id(), 'fav_vehicle_ids', $vehicle_id );
+		} else {
+			add_user_meta( get_current_user_id(), 'fav_vehicle_ids', $vehicle_id );
+		}
+
+		wp_send_json_success();
 	}
 
 

@@ -5,16 +5,58 @@
     margin-top: 20px;
 }
 
-span.action-fav {
+.actions .action {
     font-size: 14px;
-    background: #496d7e;
+    background: #9a9a9a;
     color: #f1f1f1;
     border-radius: 3px;
     padding: 5px 10px;
     display: inline-block;
     cursor: pointer;
+    text-decoration: none;
+    margin-right: 10px;
 }
 
-span.action-fav.fav {
+.actions .action-fav {
+    background: #496d7e;
+}
+
+.actions .action-fav.fav {
     background: #009688;
 }
+
+.single-vehicle .vehicle-seats {
+    margin: 50px 0;
+}
+
+.single-vehicle .vehicle-seats .seat-row {
+    margin-bottom: 10px;
+}
+
+.single-vehicle .vehicle-seats .seat-row .seat {
+    display: inline-block;
+    background: #dedede;
+    text-align: center;
+    padding: 12px 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: 0.3s;
+    min-width: 36px;
+    text-transform: uppercase;
+}
+
+.single-vehicle .vehicle-seats .seat-row .seat:hover,
+.single-vehicle .vehicle-seats .seat-row .seat.booked {
+    background: #a9a9a9;
+}
+
+.single-vehicle .vehicle-seats .seat-row .seat.confimed {
+    background: #ff9a9a;
+}
+
+.single-vehicle .vehicle-seats .seat-row .seat input[type=checkbox] {
+    display: none;
+}
+
+

@@ -41,6 +41,23 @@ class Vehicle {
 	}
 
 
+	function get_seats_columns() {
+		return ticketpress()->get_args_option( 'columns', $this->seats, 0 );
+	}
+
+	function get_seats_rows() {
+		return ticketpress()->get_args_option( 'rows', $this->seats, 0 );
+	}
+
+
+	function get_name() {
+		return $this->post->post_title;
+	}
+
+
+	function get_permalink() {
+		return get_the_permalink( $this->id );
+	}
 
 
 	function get_routes( $separator = ', ' ) {
