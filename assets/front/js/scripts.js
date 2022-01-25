@@ -7,6 +7,50 @@
 
     let checkedSeats = [];
 
+    $(document).on('click', '.btn-continue-booking', function () {
+
+        let continueButton = $(this),
+            selectedRoute = $('.ticketpress-routes-selection input[name=route]').val();
+
+        if (checkedSeats.length < 1) {
+            return;
+        }
+
+        console.log({
+            selectedRoute,
+            checkedSeats
+        });
+
+    });
+
+
+    $(document).on('ticketpress_seats_allocation_may_change', function () {
+
+        let elSeatsSelected = $('.ticketpress-seats-selected'),
+            elTicketPrice = $('.ticketpress-ticket-price'),
+            elTotalPrice = $('.ticketpress-total-price'),
+            ticketPrice = elTicketPrice.html(),
+            seatsSelectedCount = checkedSeats.length,
+            totalPrice = 0;
+
+        if (typeof elTicketPrice !== 'undefined' && typeof ticketPrice !== 'undefined') {
+            totalPrice = seatsSelectedCount * ticketPrice;
+        }
+
+        elSeatsSelected.html(seatsSelectedCount);
+        elTotalPrice.html(totalPrice);
+    });
+
+    $(document).on('change', '.ticketpress-routes-selection input[name=route]', function () {
+
+        let thisRoute = $(this),
+            thisRouteParent = thisRoute.parent();
+
+        thisRouteParent.parent().find('label').removeClass('selected');
+        thisRouteParent.parent().find('input:checked').parent().toggleClass('selected');
+    });
+
+
     $(document).on('change', '.single-vehicle .vehicle-seats .seat-row .seat input[type=checkbox]', function () {
 
         let thisSeat = $(this),
@@ -33,6 +77,8 @@
         }
 
         thisSeatParent.toggleClass('booked');
+
+        $(document.body).trigger('ticketpress_seats_allocation_may_change');
     });
 
 

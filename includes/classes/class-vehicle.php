@@ -60,6 +60,32 @@ class Vehicle {
 	}
 
 
+	/**
+	 * Get html route selection
+	 *
+	 * @param string $separator
+	 *
+	 * @return string
+	 */
+	function get_routes_selection( $separator = '' ) {
+
+		$routes = $this->routes;
+		$routes = ! is_array( $routes ) || empty( $routes ) ? array() : $routes;
+		$routes = array_map( function ( $route ) {
+			if ( $route instanceof WP_Term ) {
+				return sprintf( '<label><span>%s</span><input type="radio" name="route" value="%s"></label>',
+					$route->name, $route->term_id
+				);
+			}
+
+			return '';
+		}, $routes );
+
+		array_filter( $routes );
+
+		return implode( $separator, $routes );
+	}
+
 	function get_routes( $separator = ', ' ) {
 
 		$routes = $this->routes;
