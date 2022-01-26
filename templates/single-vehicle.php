@@ -11,8 +11,10 @@ $vehicle = new TicketPress\Vehicle();
 
     <div class="single-vehicle">
 
+        <div class="vehicle-notice no-display"></div>
+
         <div class="side-left">
-            <div class="vehicle-info">
+            <div class="vehicle-data-box vehicle-info">
                 <h3>Vehicle Information</h3>
                 <div class="info-items">
                     <div class="info-item">
@@ -42,7 +44,7 @@ $vehicle = new TicketPress\Vehicle();
                 </div>
             </div>
 
-            <div class="vehicle-info">
+            <div class="vehicle-data-box vehicle-summary no-display">
                 <h3>Summary</h3>
                 <div class="info-items">
                     <div class="info-item">
@@ -59,13 +61,14 @@ $vehicle = new TicketPress\Vehicle();
                     </div>
                 </div>
                 <div class="seat-actions">
-                    <div class="ticketpress-btn btn-continue-booking">Continue Booking</div>
+                    <input type="hidden" name="vehicle_id" value="<?php echo esc_attr( $vehicle->id ); ?>">
+                    <div class="ticketpress-btn btn-booking" data-action="continue">Continue Booking</div>
                 </div>
             </div>
         </div>
 
         <div class="side-right">
-            <div class="vehicle-seats">
+            <div class="vehicle-data-box vehicle-seats no-display">
                 <h3>Select Seat(s)</h3>
                 <div class="seat-row">
 					<?php for ( $i = 0; $i < $vehicle->total_seats; $i ++ ) : ?>
@@ -80,37 +83,11 @@ $vehicle = new TicketPress\Vehicle();
 					<?php endfor; ?>
                 </div>
             </div>
-        </div>
 
-        <div class="passengers-info">
-            <h3>Passengers Information</h3>
-            <div class="passengers">
-                <div class="single-passenger">
-                    <div class="label">
-                        <input id="p_name" type="text" name="p_name" placeholder="Full Name">
-                    </div>
-                    <div class="label">
-                        <label>
-                            <span>Male</span>
-                            <input type="radio" name="p_gender" value="male">
-                        </label>
-                        <label>
-                            <span>Female</span>
-                            <input type="radio" name="p_gender" value="female">
-                        </label>
-                        <label>
-                            <span>Others</span>
-                            <input type="radio" name="p_gender" value="others">
-                        </label>
-                    </div>
-                    <div class="label">
-                        <input id="p_phone" type="text" name="p_phone" placeholder="Phone Number">
-                    </div>
-                    <div class="label">
-                        <input id="p_email" type="text" name="p_email" placeholder="me@mysite.com">
-                    </div>
-                </div>
-            </div>
+            <form class="vehicle-data-box passengers-info no-display">
+                <h3>Passengers Information</h3>
+                <div class="passengers"></div>
+            </form>
         </div>
 
     </div>

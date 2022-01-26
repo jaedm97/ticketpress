@@ -1,6 +1,10 @@
 @charset "UTF-8";
 
 
+.no-display {
+    display: none;
+}
+
 .single-vehicle .side-left {
     float: left;
     width: 50%;
@@ -13,7 +17,7 @@
     vertical-align: top;
 }
 
-.single-vehicle .vehicle-info {
+.single-vehicle .vehicle-data-box {
     margin-bottom: 30px;
 }
 
@@ -136,7 +140,6 @@
 
 
 .passengers-info {
-    display: inline-block;
     width: 100%;
 }
 
@@ -157,7 +160,7 @@
     border-bottom-width: 1px;
 }
 
-.single-passenger > .label {
-    width: 33%;
+.single-passenger > label {
+    margin-right: 20px;
 }
 

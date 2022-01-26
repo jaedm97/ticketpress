@@ -5,22 +5,76 @@
 (function ($, window, document) {
     "use strict";
 
-    let checkedSeats = [];
+    let checkedSeats = [], elVehicleInfo, elVehicleSeats, elVehicleSummary, elPassengersInfo, elVehicleNotice;
 
-    $(document).on('click', '.btn-continue-booking', function () {
 
-        let continueButton = $(this),
+    $(document).on('ready', function () {
+        elVehicleNotice = $('.vehicle-notice');
+        elVehicleInfo = $('.vehicle-info');
+        elVehicleSeats = $('.vehicle-seats');
+        elVehicleSummary = $('.vehicle-summary');
+        elPassengersInfo = $('.passengers-info');
+    });
+
+    $(document).on('click', '.btn-booking', function () {
+
+        let bookingButton = $(this),
+            bookingButtonAction = bookingButton.data('action'),
+            htmlPassengersInfo = '',
+            vehicleID = $('input[name="vehicle_id"]').val(),
             selectedRoute = $('.ticketpress-routes-selection input[name=route]').val();
 
         if (checkedSeats.length < 1) {
             return;
         }
 
-        console.log({
-            selectedRoute,
-            checkedSeats
-        });
+        if (typeof bookingButtonAction !== 'undefined' && bookingButtonAction === 'continue') {
 
+            checkedSeats.forEach(function (seatNum) {
+                htmlPassengersInfo += '<div class="single-passenger">\n' +
+                    '<label><input type="text" name="p_info[' + seatNum + '][name]" placeholder="Full Name"></label>\n' +
+                    '<label><input type="text" name="p_info[' + seatNum + '][phone]" placeholder="Phone Number"></label>\n' +
+                    '</div>';
+            });
+
+            bookingButton.data('action', 'confirm').html(ticketPress.confirmBookingText);
+            elVehicleSeats.fadeOut(100);
+            elPassengersInfo.find('.passengers').html($(htmlPassengersInfo));
+            elPassengersInfo.fadeIn(100);
+
+            return;
+        }
+
+        if (typeof bookingButtonAction !== 'undefined' && bookingButtonAction === 'confirm') {
+
+            $.ajax({
+                type: 'POST',
+                context: this,
+                url: ticketPress.ajaxURL,
+                data: {
+                    'action': 'ticketpress_confirm_booking',
+                    'vehicle_id': vehicleID,
+                    'selected_route': selectedRoute,
+                    'selected_seats': checkedSeats,
+                    'passengers': elPassengersInfo.serialize()
+                },
+                success: function (response) {
+                    if (response.success) {
+                        elVehicleInfo.fadeOut(100);
+                        elVehicleSeats.fadeOut(100);
+                        elVehicleSummary.fadeOut(100);
+                        elPassengersInfo.fadeOut(100);
+                        elVehicleNotice.html(response.data).fadeIn(100);
+                    }
+                }
+            });
+        }
+
+
+        // console.log({
+        //     selectedRoute,
+        //     checkedSeats
+        // });
     });
 
 
@@ -37,9 +91,16 @@
             totalPrice = seatsSelectedCount * ticketPrice;
         }
 
+        if (checkedSeats.length > 0) {
+            elVehicleSummary.fadeIn(100);
+        } else {
+            elVehicleSummary.fadeOut(100);
+        }
+
         elSeatsSelected.html(seatsSelectedCount);
         elTotalPrice.html(totalPrice);
     });
+
 
     $(document).on('change', '.ticketpress-routes-selection input[name=route]', function () {
 
@@ -48,6 +109,10 @@
 
         thisRouteParent.parent().find('label').removeClass('selected');
         thisRouteParent.parent().find('input:checked').parent().toggleClass('selected');
+
+        if (thisRouteParent.parent().find('input[type=radio]:checked').val().length !== 0) {
+            elVehicleSeats.fadeIn();
+        }
     });
 
 
@@ -115,7 +180,6 @@
                 }
             }
         });
-
 
         return false;
     });
