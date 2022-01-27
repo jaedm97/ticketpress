@@ -7,6 +7,9 @@ get_header();
 
 $vehicle = new TicketPress\Vehicle();
 
+
+//echo ticketpress_get_seats_html( 5, '2022-01-30', 6 );
+
 ?>
 
     <div class="single-vehicle">
@@ -24,6 +27,12 @@ $vehicle = new TicketPress\Vehicle();
                     <div class="info-item">
                         <span class="label">Vehicle Number</span>
                         <span class="val"><?php echo esc_html( $vehicle->number ); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Date</span>
+                        <span class="val ticketpress-date-selection">
+                            <input type="text" name="selected_date" placeholder="2013-02-28">
+                        </span>
                     </div>
                     <div class="info-item">
                         <span class="label">Route</span>
@@ -70,18 +79,7 @@ $vehicle = new TicketPress\Vehicle();
         <div class="side-right">
             <div class="vehicle-data-box vehicle-seats no-display">
                 <h3>Select Seat(s)</h3>
-                <div class="seat-row">
-					<?php for ( $i = 0; $i < $vehicle->total_seats; $i ++ ) : ?>
-						<?php if ( $i != 0 && $i % $vehicle->get_seats_columns() == 0 ) {
-							echo '</div><div class="seat-row">';
-						} ?>
-
-                        <label class="seat">
-                            <input type="checkbox" name="seats_selected" value="<?php echo $i + 1; ?>">
-                            <span><?php echo get_seat_label( ( $i + 1 ), $vehicle->get_seats_columns() ); ?></span>
-                        </label>
-					<?php endfor; ?>
-                </div>
+                <div class="seat-row-wrap"></div>
             </div>
 
             <form class="vehicle-data-box passengers-info no-display">

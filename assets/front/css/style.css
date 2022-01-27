@@ -111,7 +111,7 @@
     background: #a9a9a9;
 }
 
-.single-vehicle .vehicle-seats .seat-row .seat.confimed {
+.single-vehicle .vehicle-seats .seat-row .seat.confirmed {
     background: #ff9a9a;
 }
 
@@ -164,3 +164,11 @@
     margin-right: 20px;
 }
 
+.ticketpress-routes-selection .disabled,
+.ticketpress-date-selection .disabled {
+    pointer-events: none;
+    background: #f1f1f1;
+    color: #626262;
+    user-select: none;
+    -webkit-user-select: none;
+}

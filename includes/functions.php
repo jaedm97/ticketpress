@@ -336,3 +336,47 @@ function get_seat_label( $seat_index = 0, $seats_per_row = 4 ) {
 
 	return substr( $alphabets, $row - 1, 1 ) . $seat_num;
 }
+
+
+function ticketpress_get_seats_html( $vehicle_id = '', $date = '', $route = '' ) {
+
+	$vehicle        = new TicketPress\Vehicle( $vehicle_id );
+	$selected_seats = array();
+	$booking_ids    = get_posts( array(
+		'post_type'      => 'vehicle_booking',
+		'posts_per_page' => - 1,
+		'fields'         => 'ids',
+		'meta_query'     => array(
+			array(
+				'key'     => 'selected_route',
+				'value'   => $route,
+				'compare' => '=',
+			),
+			array(
+				'key'     => 'selected_date',
+				'value'   => $date,
+				'compare' => '=',
+			)
+		),
+	) );
+
+	foreach ( $booking_ids as $booking_id ) {
+		$selected_seats = array_merge( $selected_seats, ticketpress()->get_meta( 'selected_seats', $booking_id ) );
+	}
+
+	ob_start();
+
+	for ( $i = 0; $i < $vehicle->total_seats; $i ++ ) {
+
+		if ( $i != 0 && $i % $vehicle->get_seats_columns() == 0 ) {
+			echo '</div><div class="seat-row">';
+		}
+
+		printf( '<label class="seat %s"><input type="checkbox" name="seats_selected" value="%s"><span>%s</span></label>',
+			( in_array( ( $i + 1 ), $selected_seats ) ? 'confirmed' : '' ),
+			( $i + 1 ),
+			get_seat_label( ( $i + 1 ), $vehicle->get_seats_columns() ) );
+	}
+
+	return sprintf( '<div class="seat-row">%s</div>', ob_get_clean() );
+}

@@ -5,15 +5,22 @@
 (function ($, window, document) {
     "use strict";
 
-    let checkedSeats = [], elVehicleInfo, elVehicleSeats, elVehicleSummary, elPassengersInfo, elVehicleNotice;
+    let checkedSeats = [], vehicleId, elVehicleInfo, elVehicleSeats, elVehicleSummary, elPassengersInfo, elVehicleNotice,
+        elDatePicker, elRoutePicker;
 
 
     $(document).on('ready', function () {
+
+        vehicleId = $('input[name="vehicle_id"]').val();
         elVehicleNotice = $('.vehicle-notice');
         elVehicleInfo = $('.vehicle-info');
         elVehicleSeats = $('.vehicle-seats');
         elVehicleSummary = $('.vehicle-summary');
         elPassengersInfo = $('.passengers-info');
+        elDatePicker = $('.ticketpress-date-selection input[name=selected_date]');
+        elRoutePicker = $('.ticketpress-routes-selection input[name=route]');
+
+        elDatePicker.datepicker({dateFormat: 'yy-mm-dd'});
     });
 
     $(document).on('click', '.btn-booking', function () {
@@ -21,7 +28,6 @@
         let bookingButton = $(this),
             bookingButtonAction = bookingButton.data('action'),
             htmlPassengersInfo = '',
-            vehicleID = $('input[name="vehicle_id"]').val(),
             selectedRoute = $('.ticketpress-routes-selection input[name=route]').val();
 
         if (checkedSeats.length < 1) {
@@ -42,6 +48,7 @@
             elPassengersInfo.find('.passengers').html($(htmlPassengersInfo));
             elPassengersInfo.fadeIn(100);
 
+            elRoutePicker.parent().addClass('disabled');
             return;
         }
 
@@ -53,9 +60,10 @@
                 url: ticketPress.ajaxURL,
                 data: {
                     'action': 'ticketpress_confirm_booking',
-                    'vehicle_id': vehicleID,
+                    'vehicle_id': vehicleId,
                     'selected_route': selectedRoute,
                     'selected_seats': checkedSeats,
+                    'selected_date': elDatePicker.val(),
                     'passengers': elPassengersInfo.serialize()
                 },
                 success: function (response) {
@@ -69,12 +77,6 @@
                 }
             });
         }
-
-
-        // console.log({
-        //     selectedRoute,
-        //     checkedSeats
-        // });
     });
 
 
@@ -107,12 +109,37 @@
         let thisRoute = $(this),
             thisRouteParent = thisRoute.parent();
 
+        if (elDatePicker.val().length === 0) {
+            elDatePicker.focus();
+            thisRoute.prop('checked', false);
+            return;
+        }
+
         thisRouteParent.parent().find('label').removeClass('selected');
         thisRouteParent.parent().find('input:checked').parent().toggleClass('selected');
 
         if (thisRouteParent.parent().find('input[type=radio]:checked').val().length !== 0) {
-            elVehicleSeats.fadeIn();
+
+            $.ajax({
+                type: 'POST',
+                context: this,
+                url: ticketPress.ajaxURL,
+                data: {
+                    'action': 'ticketpress_load_seats',
+                    'vehicle_id': vehicleId,
+                    'selected_route': thisRoute.val(),
+                    'selected_date': elDatePicker.val(),
+                },
+                success: function (response) {
+                    if (response.success) {
+                        elVehicleSeats.find('.seat-row-wrap').html(response.data);
+                        elVehicleSeats.fadeIn();
+                    }
+                }
+            });
         }
+
+        elDatePicker.addClass('disabled');
     });
 
 
@@ -150,6 +177,7 @@
     $(document).on('change', '#route', function () {
         $('#VehicleFilterForm').submit();
     });
+
 
     $(document).on('click', '#formReset', function () {
 

@@ -9,6 +9,7 @@ class TicketPress_Meta_boxes {
 	public function __construct() {
 
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		add_action( 'admin_menu', array( $this, 'remove_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_vehicle_data' ) );
 	}
 
@@ -29,6 +30,44 @@ class TicketPress_Meta_boxes {
 		update_post_meta( $post_id, '_seats', $_seats );
 
 //		die();
+	}
+
+
+	function booking_data_box( WP_Post $post ) {
+
+		$vehicle_id      = get_post_meta( $post->ID, 'vehicle_id', true );
+		$_selected_route = get_post_meta( $post->ID, 'selected_route', true );
+		$selected_seats  = get_post_meta( $post->ID, 'selected_seats', true );
+		$selected_date   = get_post_meta( $post->ID, 'selected_date', true );
+		$passengers      = get_post_meta( $post->ID, 'passengers', true );
+		$selected_route  = get_term_by( 'term_id', $_selected_route, 'vehicle_route' );
+
+
+		echo "<pre>";
+		print_r( "Vehicle ID : " . $vehicle_id );
+		echo "</pre>";
+
+		echo "<pre>";
+		print_r( "Selected Route : " . $selected_route->name );
+		echo "</pre>";
+
+		echo "<pre>";
+		print_r( "Selected Route : " . implode( ", ", $selected_seats ) );
+		echo "</pre>";
+
+		echo "<pre>";
+		print_r( "Selected Date : " . $selected_date );
+		echo "</pre>";
+
+
+		foreach ( $passengers as $seat_num => $passenger ) {
+
+			echo "<div>";
+			printf( '<p><strong>Seat Num:</strong> %s</p>', get_seat_label( $seat_num ) );
+			printf( '<p><strong>Passenger Name:</strong> %s</p>', ticketpress()->get_args_option( 'name', $passenger ) );
+			printf( '<p><strong>Passenger Phone:</strong> %s</p>', ticketpress()->get_args_option( 'phone', $passenger ) );
+			echo "</div><br>";
+		}
 	}
 
 
@@ -110,6 +149,14 @@ class TicketPress_Meta_boxes {
 
 
 	/**
+	 * Remove meta boxes
+	 */
+	function remove_meta_boxes() {
+		remove_meta_box( 'submitdiv', 'vehicle_booking', 'side' );
+	}
+
+
+	/**
 	 * Add meta boxes
 	 *
 	 * @param $post_type
@@ -118,6 +165,10 @@ class TicketPress_Meta_boxes {
 
 		if ( $post_type == 'vehicle' ) {
 			add_meta_box( 'vehicle_data', esc_html__( 'Vehicle Data', 'ticketpress' ), array( $this, 'vehicle_data_box' ), $post_type, 'advanced', 'high' );
+		}
+
+		if ( $post_type == 'vehicle_booking' ) {
+			add_meta_box( 'booking_data', esc_html__( 'Booking Data', 'ticketpress' ), array( $this, 'booking_data_box' ), $post_type, 'advanced', 'high' );
 		}
 	}
 

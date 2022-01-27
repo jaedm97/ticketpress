@@ -37,6 +37,9 @@ class TicketPress_Main {
 
 	function add_frontend_scripts() {
 
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+
+		wp_enqueue_style( 'jquery-ui', TICKETPRESS_FILE_URL . 'assets/front/css/jquery-ui.min.css', array(), time() );
 		wp_enqueue_style( 'ticketpress-front', TICKETPRESS_FILE_URL . 'assets/front/css/style.css', array(), time() );
 		wp_enqueue_script( 'ticketpress-front', TICKETPRESS_FILE_URL . 'assets/front/js/scripts.js', array( 'jquery' ), time() );
 		wp_localize_script( 'ticketpress-front', 'ticketPress', array(

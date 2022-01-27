@@ -16,6 +16,18 @@ class TicketPress_Hooks {
 		add_action( 'wp_ajax_ticketpress_search_vehicle', array( $this, 'ticketpress_search_vehicle' ) );
 		add_action( 'wp_ajax_ticketpress_vehicle_fav', array( $this, 'ticketpress_vehicle_fav' ) );
 		add_action( 'wp_ajax_ticketpress_confirm_booking', array( $this, 'ticketpress_confirm_booking' ) );
+		add_action( 'wp_ajax_ticketpress_load_seats', array( $this, 'ticketpress_load_seats' ) );
+	}
+
+
+	function ticketpress_load_seats() {
+
+		$posted_data    = wp_unslash( $_POST );
+		$vehicle_id     = ticketpress()->get_args_option( 'vehicle_id', $posted_data );
+		$selected_date  = ticketpress()->get_args_option( 'selected_date', $posted_data );
+		$selected_route = ticketpress()->get_args_option( 'selected_route', $posted_data );
+
+		wp_send_json_success( ticketpress_get_seats_html( $vehicle_id, $selected_date, $selected_route ) );
 	}
 
 
@@ -25,6 +37,7 @@ class TicketPress_Hooks {
 		$vehicle_id     = ticketpress()->get_args_option( 'vehicle_id', $posted_data );
 		$selected_route = ticketpress()->get_args_option( 'selected_route', $posted_data );
 		$selected_seats = ticketpress()->get_args_option( 'selected_seats', $posted_data );
+		$selected_date  = ticketpress()->get_args_option( 'selected_date', $posted_data );
 		$passengers     = ticketpress()->get_args_option( 'passengers', $posted_data );
 
 		parse_str( $passengers, $passengers_data );
@@ -40,13 +53,14 @@ class TicketPress_Hooks {
 				'vehicle_id'     => $vehicle_id,
 				'selected_route' => $selected_route,
 				'selected_seats' => $selected_seats,
-				'passengers'     => $passengers_data,
+				'selected_date'  => $selected_date,
+				'passengers'     => ticketpress()->get_args_option( 'p_info', $passengers_data ),
 			),
 		) );
 
 		wp_update_post( array(
 			'post_title' => sprintf( '#%s', $post_ID ),
-			'post_id'    => $post_ID,
+			'ID'         => $post_ID,
 		) );
 
 		wp_send_json_success( sprintf( 'Booking confirmed! See your booking here: <a href=""><strong>#%s</strong></a>', $post_ID ) );
@@ -141,10 +155,17 @@ class TicketPress_Hooks {
 		) );
 
 		ticketpress()->WP_Settings()->register_post_type( 'vehicle_booking', array(
-			'singular' => 'Vehicle Booking',
-			'plural'   => 'Vehicle Bookings',
-//			'menu_icon' => 'dashicons-car',
-//			'supports'  => array( 'title', 'thumbnail' ),
+			'singular'     => 'Vehicle Booking',
+			'plural'       => 'Vehicle Bookings',
+			'labels'       => array(
+				'edit_item' => esc_html__( 'View Booking Data', 'ticketpress' ),
+			),
+			'show_in_menu' => 'edit.php?post_type=vehicle',
+			'supports'     => array( '' ),
+			'public'       => false,
+			'capabilities' => array(
+				'create_posts' => false,
+			),
 		) );
 
 		ticketpress()->WP_Settings()->register_taxonomy( 'vehicle_type', 'vehicle', array(
