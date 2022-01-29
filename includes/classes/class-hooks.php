@@ -141,7 +141,6 @@ class TicketPress_Hooks {
 		return ob_get_clean();
 	}
 
-
 	/**
 	 * Register all post types
 	 */

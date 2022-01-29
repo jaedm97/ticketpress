@@ -16,7 +16,13 @@ class TicketPress_Meta_boxes {
 
 	function save_vehicle_data( $post_id ) {
 
-		$posted_data  = wp_unslash( $_POST );
+		$posted_data = wp_unslash( $_POST );
+		$nonce_field = ticketpress()->get_args_option( 'vehicle_data_nonce_field', $posted_data );
+
+		if ( ! wp_verify_nonce( $nonce_field, 'vehicle_data_nonce_action' ) ) {
+			return;
+		}
+
 		$_price       = ticketpress()->get_args_option( '_price', $posted_data );
 		$_number      = ticketpress()->get_args_option( '_number', $posted_data );
 		$_time        = ticketpress()->get_args_option( '_time', $posted_data );
@@ -28,8 +34,6 @@ class TicketPress_Meta_boxes {
 		update_post_meta( $post_id, '_time', $_time );
 		update_post_meta( $post_id, '_total_seats', $_total_seats );
 		update_post_meta( $post_id, '_seats', $_seats );
-
-//		die();
 	}
 
 
@@ -144,6 +148,7 @@ class TicketPress_Meta_boxes {
 			'value'       => ticketpress()->get_args_option( 'columns', $_seats ),
 		);
 
+		wp_nonce_field( 'vehicle_data_nonce_action', 'vehicle_data_nonce_field' );
 		ticketpress()->WP_Settings()->generate_fields( array( array( 'options' => $meta_fields ) ), $post->ID );
 	}
 

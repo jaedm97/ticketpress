@@ -30,6 +30,7 @@ class TicketPress_Main {
 		require TICKETPRESS_FILE_DIR . 'includes/classes/class-hooks.php';
 		require TICKETPRESS_FILE_DIR . 'includes/classes/class-meta-boxes.php';
 		require TICKETPRESS_FILE_DIR . 'includes/classes/class-vehicle.php';
+		require TICKETPRESS_FILE_DIR . 'includes/classes/class-settings.php';
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'add_frontend_scripts' ) );
 	}

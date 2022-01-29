@@ -31,6 +31,7 @@ class TicketPress_Functions {
 
 		if ( is_array( $args ) && ! empty( $args ) ) {
 			self::$wp_settings->set_data( $args );
+			self::$wp_settings->generate_menu();
 		}
 
 		return self::$wp_settings;
